@@ -104,6 +104,7 @@ $(function () {
 
     function addDoorImage(door, color, glass, doorInnerColor, doorOuterColor, e) {
         // For two doors
+        console.log(door)
         if (e.target.href.indexOf('#doorInnerColor') != -1 || e.target.href.indexOf('#doorOuterColor') != -1) {
             $.get(github_url + 'two_door/' + door + '/' + doorOuterColor + doorInnerColor + '.jpeg')
                 .done(function () {
@@ -134,7 +135,7 @@ $(function () {
                 if (d.href.indexOf('#innerDoor=') != -1) {
                     return true;
                 }
-            }).attr('href').replace('#innerDoor=', '');
+            }).find('img');
         }
 
         if (e.target.href.indexOf('#doorOuterColor') != -1) {
@@ -143,7 +144,7 @@ $(function () {
                 if (d.href.indexOf('#outerDoor=') != -1) {
                     return true;
                 }
-            }).attr('href').replace('#outerDoor=', '');
+            }).find('img');
         }
 
         // for one door
