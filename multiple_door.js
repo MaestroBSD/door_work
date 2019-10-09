@@ -129,7 +129,7 @@ $(function () {
     function getDoorSelector(e) {
         // for two doors
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
-            var doorImg = $('a').filter(function (i, d) {
+            doorImg = $('a').filter(function (i, d) {
                 console.log(d)
                 if (d.href.indexOf('#innerDoor=') != -1) {
                     return true;
@@ -138,7 +138,7 @@ $(function () {
         }
 
         if (e.target.href.indexOf('#doorOuterColor') != -1) {
-            var doorImg = $('a').filter(function (i, d) {
+            doorImg = $('a').filter(function (i, d) {
                 console.log(d)
                 if (d.href.indexOf('#outerDoor=') != -1) {
                     return true;
@@ -148,14 +148,13 @@ $(function () {
 
         // for one door
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
-            var doorImg = $('a').filter(function (i, d) {
+            doorImg = $('a').filter(function (i, d) {
                 console.log(d)
                 if (d.href.indexOf('#door=') != -1) {
                     return true;
                 }
             }).find('img')
         }
-        return doorImg;
     }
 
     function getDoorName(e) {
