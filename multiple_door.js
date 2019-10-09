@@ -118,7 +118,7 @@ $(function () {
             $.get(github_url + 'one_door/' + door + '/' + color + glass + '.jpeg')
                 .done(function () {
                     console.log(doorImg);
-                    doorImg.attr('src', github_url + String(door) + '/' + String(color) + String(glass) + '.jpeg'); // это переписать
+                    doorImg.attr('src', github_url  + 'one_door/' + String(door) + '/' + String(color) + String(glass) + '.jpeg'); // это переписать
                 }).fail(function () {
                 throw new Error('Такой фотографии нет! :/');
             })
