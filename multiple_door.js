@@ -108,7 +108,6 @@ $(function () {
 
             // The result can be accessed through the `m`-variable.
             m.forEach((match, groupIndex) => {
-                console.log(match)
                 result = match;
                 return match;
             });
@@ -127,12 +126,11 @@ $(function () {
     function addDoorImage(door, color, glass, doorInnerColor, doorOuterColor, e) {
 
         // For two doors
-        console.log(door)
         if (e.target.href.indexOf('#doorInnerColor') != -1 || e.target.href.indexOf('#doorOuterColor') != -1) {
             $.get(github_url + 'two_door/' + door + '/' + doorOuterColor + doorInnerColor + '.jpeg')
                 .done(function () {
                     console.log('Такая фотография есть');
-                    doorImg.attr('src', github_url + 'two_door/' + String(door) + '/' + String(doorOuterColor) + String(doorInnerColor) + '.jpeg'); // это переписать
+                    doorImg.attr('src', github_url + 'two_door/' + String(door) + '/' + String(doorOuterColor) + String(doorInnerColor) + '.jpeg');
                 }).fail(function () {
                 throw new Error('Такой фотографии нет! :/');
             })
@@ -142,8 +140,7 @@ $(function () {
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
             $.get(github_url + 'one_door/' + door + '/' + color + glass + '.jpeg')
                 .done(function () {
-                    console.log(doorImg);
-                    doorImg.attr('src', github_url + 'one_door/' + String(door) + '/' + String(color) + String(glass) + '.jpeg'); // это переписать
+                    doorImg.attr('src', github_url + 'one_door/' + String(door) + '/' + String(color) + String(glass) + '.jpeg');
                 }).fail(function () {
                 throw new Error('Такой фотографии нет! :/');
             })
@@ -158,7 +155,6 @@ $(function () {
         // for two doors
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
             doorImg = $('a').filter(function (i, d) {
-                console.log(d)
                 if (d.href.indexOf('#innerDoor=') != -1) {
                     return true;
                 }
@@ -167,7 +163,6 @@ $(function () {
 
         if (e.target.href.indexOf('#doorOuterColor') != -1) {
             doorImg = $('a').filter(function (i, d) {
-                console.log(d)
                 if (d.href.indexOf('#outerDoor=') != -1) {
                     return true;
                 }
@@ -177,7 +172,6 @@ $(function () {
         // for one door
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
             doorImg = $('a').filter(function (i, d) {
-                console.log(d)
                 if (d.href.indexOf('#door=') != -1) {
                     return true;
                 }
@@ -191,7 +185,6 @@ $(function () {
         // for two doors
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
             var result = $('a').filter(function (i, d) {
-                console.log(d);
                 if (d.href.indexOf('#innerDoor=') != -1) {
                     return true;
                 }
@@ -199,7 +192,6 @@ $(function () {
         }
         if (e.target.href.indexOf('#doorOuterColor') != -1) {
             var result = $('a').filter(function (i, d) {
-                console.log(d)
                 if (d.href.indexOf('#outerDoor=') != -1) {
                     return true;
                 }
@@ -209,13 +201,11 @@ $(function () {
         // for one door
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
             var result = $('a').filter(function (i, d) {
-                console.log(d)
                 if (d.href.indexOf('#door=') != -1) {
                     return true;
                 }
             }).attr('href').replace('#door=', '');
         }
-        console.log(result)
         door = result;
         return result;
     }
@@ -228,7 +218,6 @@ $(function () {
     function findPriceField(href_url) {
         return $('a').filter(function (i, d) {
             if (d.href.indexOf(href_url) != -1) {
-                console.log('Это возврат ', d)
                 return true;
             }
         })
@@ -240,11 +229,9 @@ $(function () {
             $('a').filter(function (i, d) {
                 if (d.href.indexOf('doorOuterColor=1') != -1) {
                     costOuter = findCost(d.href)
-                    console.log(costOuter)
                 }
                 if (d.href.indexOf('doorInnerColor=1') != -1) {
                     costInner = findCost(d.href)
-                    console.log(costInner)
                 }
             })
             $priceField.text(costInner + costOuter + ' руб.')
@@ -253,11 +240,9 @@ $(function () {
             $('a').filter(function (i, d) {
                 if (e.target.href.indexOf('doorOuterColor=1') != -1) {
                     costOuter = findCost(e.target.href)
-                    console.log(costOuter)
                 }
                 if (e.target.href.indexOf('doorInnerColor=1') != -1) {
                     costInner = findCost(e.target.href)
-                    console.log(costInner)
                 }
             })
             $priceField.text(costInner + costOuter + ' руб.')
@@ -266,7 +251,7 @@ $(function () {
 
     // calculate by default (first elemments sum)
     calculatePrice()
-    
+
     // Add styles.
     $('body').append('<style>.borderActive { border: 2px solid ' + borderColor + ' !important}</style>');
 })
