@@ -5,6 +5,7 @@ $(function () {
     var $doorColor = $(); // jQuery объект с селекторами цвета
     var $doorInnerColor = $(); // jQuery объект с селекторами внутреннего цвета
     var $doorOuterColor = $(); // jQuery объект с селекторами внешнего цвета
+    var $priceField = findPriceField('#totalPrice'); // ссылка на jQuery селектор куда вставлять цену.
     var github_url = 'https://olehmusihin.github.io/door_work/'; // путь к папке где хранятся все изображения;
     var door = ''; // название папки с дверью, берётся с картинки со страницы с #door=название, должно совпадать с названием папки где хранятся фотографии двери.
     var doorImg = ''; // селектор изображения двери.
@@ -12,7 +13,8 @@ $(function () {
     var glass = '1';  // какое стекло будем фильтровать;
     var doorInnerColor = '1'; // какой цвет внутренней двери будем искать
     var doorOuterColor = '1'; // какой цвет внешней двери будем искать
-
+    var costInner = 1;
+    var costOuter = 1;
 
     // Add event listeners to a elements;
     $('a').filter(function (i, d) {
@@ -24,13 +26,11 @@ $(function () {
             $doorColor = $doorColor.add(d);
             return true;
         }
-        if (d.href.indexOf('#doorInnerColor') != -1)
-        {
+        if (d.href.indexOf('#doorInnerColor') != -1) {
             $doorInnerColor = $doorInnerColor.add(d);
             return true;
         }
-        if (d.href.indexOf('#doorOuterColor') != -1)
-        {
+        if (d.href.indexOf('#doorOuterColor') != -1) {
             $doorOuterColor = $doorOuterColor.add(d);
             return true;
         }
@@ -41,13 +41,16 @@ $(function () {
             findImageNumber(e);
             getDoorName(e);
             getDoorSelector(e);
+            calculatePrice(e);
             addDoorImage(door, color, glass, doorInnerColor, doorOuterColor, e);
         });
 
+    // Add Border
     function addBorder(e) {
         $(e.target).addClass('borderActive')
     }
 
+    // Remove Border
     function removeBorders(e) {
         if (e.target.href.indexOf('#glass') != -1) {
             $glass.removeClass('borderActive');
@@ -63,28 +66,39 @@ $(function () {
         }
     }
 
+    // Find image number
     function findImageNumber(e) {
         if (e.target.href.indexOf('#glass') != -1) {
-            glass = findRegularNumber(e.target.href);
+            glass = findColorNumber(e.target.href);
         }
 
         if (e.target.href.indexOf('#doorColor') != -1) {
-            color = findRegularNumber(e.target.href);
+            color = findColorNumber(e.target.href);
         }
 
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
-            doorInnerColor = findRegularNumber(e.target.href);
+            doorInnerColor = findColorNumber(e.target.href);
+            costInner = findCost(e.target.href);
+            alert(costInner);
         }
         if (e.target.href.indexOf('#doorOuterColor') != -1) {
-            doorOuterColor = findRegularNumber(e.target.href);
+            doorOuterColor = findColorNumber(e.target.href);
+            costOuter = findCost(e.target.href);
+            alert(costOuter);
         }
     }
 
-    function findRegularNumber(linkHref) {
-        const regex = /[^=]\d*$/gm;
-        const str = linkHref;
+    // The regular expression for finding color num.
+    function findColorNumber(linkHref) {
+        var regex = /[^=]\d*$/gm;
+        let str = linkHref;
         let m;
         var result;
+
+        // for two doors with cost
+        if (str.indexOf('&cost=') != -1) {
+            str = str.replace(str.slice(str.indexOf('&cost=')), '');
+        }
 
         while ((m = regex.exec(str)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
@@ -102,7 +116,16 @@ $(function () {
         return result;
     }
 
+    // The regular expression for finding price.
+    function findCost(linkHref) {
+        let str = linkHref;
+        cost = Number(str.substring(str.indexOf("cost=")).replace('cost=', ''));
+        return cost;
+    }
+
+    // Adding image to Doors.
     function addDoorImage(door, color, glass, doorInnerColor, doorOuterColor, e) {
+
         // For two doors
         console.log(door)
         if (e.target.href.indexOf('#doorInnerColor') != -1 || e.target.href.indexOf('#doorOuterColor') != -1) {
@@ -114,20 +137,24 @@ $(function () {
                 throw new Error('Такой фотографии нет! :/');
             })
         }
+
         // For one door
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
             $.get(github_url + 'one_door/' + door + '/' + color + glass + '.jpeg')
                 .done(function () {
                     console.log(doorImg);
-                    doorImg.attr('src', github_url  + 'one_door/' + String(door) + '/' + String(color) + String(glass) + '.jpeg'); // это переписать
+                    doorImg.attr('src', github_url + 'one_door/' + String(door) + '/' + String(color) + String(glass) + '.jpeg'); // это переписать
                 }).fail(function () {
                 throw new Error('Такой фотографии нет! :/');
             })
         }
         console.log(door, color, glass, doorInnerColor, doorOuterColor, e)
+
     }
 
+    // Get door selector
     function getDoorSelector(e) {
+
         // for two doors
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
             doorImg = $('a').filter(function (i, d) {
@@ -158,7 +185,9 @@ $(function () {
         }
     }
 
+    // Get door name 2u,2x e.t.c
     function getDoorName(e) {
+
         // for two doors
         if (e.target.href.indexOf('#doorInnerColor') != -1) {
             var result = $('a').filter(function (i, d) {
@@ -176,6 +205,7 @@ $(function () {
                 }
             }).attr('href').replace('#outerDoor=', '');
         }
+
         // for one door
         if (e.target.href.indexOf('#doorColor') != -1 || e.target.href.indexOf('#glass') != -1) {
             var result = $('a').filter(function (i, d) {
@@ -190,5 +220,54 @@ $(function () {
         return result;
     }
 
+    /**
+     * Find price field
+     * params (selectors href);
+     * return jQuery object
+     */
+    function findPriceField(href_url) {
+        return $('a').filter(function (i, d) {
+            if (d.href.indexOf(href_url) != -1) {
+                console.log('Это возврат ', d)
+                return true;
+            }
+        })
+    }
+
+    // Calculate price
+    function calculatePrice(e) {
+        if (!e) {
+            $('a').filter(function (i, d) {
+                if (d.href.indexOf('doorOuterColor=1') != -1) {
+                    costOuter = findCost(d.href)
+                    console.log(costOuter)
+                }
+                if (d.href.indexOf('doorInnerColor=1') != -1) {
+                    costInner = findCost(d.href)
+                    console.log(costInner)
+                }
+            })
+            $priceField.text(costInner + costOuter + ' руб.')
+        }
+        if (e) {
+            $('a').filter(function (i, d) {
+                if (e.target.href.indexOf('doorOuterColor=1') != -1) {
+                    costOuter = findCost(e.target.href)
+                    console.log(costOuter)
+                }
+                if (e.target.href.indexOf('doorInnerColor=1') != -1) {
+                    costInner = findCost(e.target.href)
+                    console.log(costInner)
+                }
+            })
+            $priceField.text(costInner + costOuter + ' руб.')
+        }
+    }
+
+    // calculate by default (first elemments sum)
+    calculatePrice()
+    
+    // Add styles.
     $('body').append('<style>.borderActive { border: 2px solid ' + borderColor + ' !important}</style>');
 })
+
